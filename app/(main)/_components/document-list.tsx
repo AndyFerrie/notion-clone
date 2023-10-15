@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Item } from "./item";
 import { cn } from "@/lib/utils";
 import { FileIcon } from "lucide-react";
+import { Doc, Id } from "@/convex/_generated/dataModel";
 
 interface DocumentListProps {
     parentDocumentId?: Id<"documents">;
