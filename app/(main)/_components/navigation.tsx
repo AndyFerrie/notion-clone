@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import {
     ChevronsLeft,
     MenuIcon,
@@ -10,15 +9,14 @@ import {
     Settings,
     Trash,
 } from "lucide-react";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
-import { UserItem } from "./user-item";
 import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { Item } from "./item";
 import { toast } from "sonner";
-import { DocumentList } from "./document-list";
+
+import { cn } from "@/lib/utils";
+import { api } from "@/convex/_generated/api";
 import {
     Popover,
     PopoverTrigger,
@@ -26,10 +24,15 @@ import {
 } from "@/components/ui/popover";
 import { useSearch } from "@/hooks/use-search";
 import { useSettings } from "@/hooks/use-settings";
+
+import { UserItem } from "./user-item";
+import { Item } from "./item";
+import { DocumentList } from "./document-list";
 import { TrashBox } from "./trash-box";
 import { Navbar } from "./navbar";
 
 export const Navigation = () => {
+    const router = useRouter();
     const settings = useSettings();
     const search = useSearch();
     const params = useParams();
@@ -122,7 +125,9 @@ export const Navigation = () => {
     };
 
     const handleCreate = () => {
-        const promise = create({ title: "Untitled" });
+        const promise = create({ title: "Untitled" }).then((documentId) =>
+            router.push(`/documents/${documentId}`)
+        );
 
         toast.promise(promise, {
             loading: "Creating a new note...",
@@ -166,7 +171,7 @@ export const Navigation = () => {
                     />
                     <Item
                         onClick={handleCreate}
-                        label="New Page"
+                        label="New page"
                         icon={PlusCircle}
                     />
                 </div>
@@ -198,8 +203,8 @@ export const Navigation = () => {
             <div
                 ref={navbarRef}
                 className={cn(
-                    "absolute top-0 z-[99999] left-60 w-[calc(100% - 240px)]",
-                    isResetting && "transition ease-in-out duration-300",
+                    "absolute top-0 z-[99999] left-60 w-[calc(100%-240px)]",
+                    isResetting && "transition-all ease-in-out duration-300",
                     isMobile && "left-0 w-full"
                 )}
             >
